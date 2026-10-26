@@ -220,8 +220,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   font-size: 11px; font-weight: 800; letter-spacing: .02em; white-space: nowrap;
   background: rgba(255,255,255,.07); color: var(--text);
 }
-.badge.lec { background: rgba(139, 92, 246, .16); color: #c4b5fd; }
-.badge.pr { background: rgba(34, 211, 238, .13); color: #67e8f9; }
+.badge.lec, .badge.pr { background: rgba(34, 211, 238, .13); color: #67e8f9; }
 .badge.soft { background: rgba(255,255,255,.05); color: var(--muted); font-weight: 700; }
 .badge.exam { background: var(--red); color: #fff; text-transform: uppercase; box-shadow: 0 4px 16px -4px rgba(255, 77, 94, .8); }
 .badge.exam .ico { width: 12px; height: 12px; stroke-width: 2.5; }
