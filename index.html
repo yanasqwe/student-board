@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a12" />
+  <title>Student Board · НМПЗ-21</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Вибір студента -->
+  <section id="picker" class="screen">
+    <div class="picker-wrap">
+      <div class="brand">
+        <div class="logo">SB</div>
+        <span>Student Board</span>
+      </div>
+      <h1 class="hero-title">Твій розклад.<br />Без плутанини.</h1>
+      <p class="hero-sub">НМПЗ-21 · 1 семестр. Обери себе — і побачиш тільки свої пари, вибіркові та заліки.</p>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="Знайди своє прізвище…" autocomplete="off" />
+      </label>
+      <div id="student-list" class="student-list"></div>
+    </div>
+  </section>
+
+  <!-- Особистий кабінет -->
+  <section id="board" class="screen hidden">
+    <header class="topbar">
+      <div class="brand small">
+        <div class="logo">SB</div>
+        <span>Student Board</span>
+      </div>
+      <button id="me-btn" class="me-chip" title="Змінити студента">
+        <span id="me-avatar" class="avatar sm"></span>
+        <span id="me-name" class="me-name"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+      </button>
+    </header>
+
+    <main class="content">
+      <section class="hello">
+        <p class="eyebrow" id="today-label"></p>
+        <h2 id="greeting"></h2>
+        <p id="tz-note" class="tz-note"></p>
+      </section>
+
+      <section id="next-card" class="next-card"></section>
+
+      <section class="stats" id="stats"></section>
+
+      <nav class="tabs" id="tabs">
+        <button data-tab="schedule" class="active">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <span>Розклад</span>
+        </button>
+        <button data-tab="exams">
+          <svg viewBox="0 0 24 24"><path d="M12 3l9 4-9 4-9-4 9-4z"/><path d="M7 9v5c0 1.5 2.2 3 5 3s5-1.5 5-3V9"/></svg>
+          <span>Заліки</span>
+        </button>
+        <button data-tab="subjects">
+          <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12v4H6a2 2 0 0 1-2-2z"/></svg>
+          <span>Дисципліни</span>
+        </button>
+      </nav>
+
+      <section id="tab-schedule" class="tab-panel">
+        <div class="week-bar">
+          <button class="icon-btn" id="prev-week" aria-label="Попередній тиждень">
+            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="week-label" id="week-label"></div>
+          <button class="icon-btn" id="next-week" aria-label="Наступний тиждень">
+            <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="toolbar">
+          <div class="seg" id="mode-seg">
+            <button data-mode="mine" class="active">Мої пари</button>
+            <button data-mode="all">Уся група</button>
+          </div>
+          <button class="ghost-btn" id="today-btn">Сьогодні</button>
+        </div>
+        <div class="day-strip" id="day-strip"></div>
+        <div class="week" id="week"></div>
+      </section>
+
+      <section id="tab-exams" class="tab-panel hidden"></section>
+      <section id="tab-subjects" class="tab-panel hidden"></section>
+    </main>
+  </section>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
