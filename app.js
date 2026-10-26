@@ -155,7 +155,6 @@
       ? `${ICON_CLOCK}<span>Час пар показано за твоїм поясом${city ? ` (${city})` : ""} · <b>Київ ${fmtDiff(-diff)}</b></span>`
       : `${ICON_CLOCK}<span>Час пар за Києвом</span>`;
     renderNext();
-    renderStats();
     renderSchedule();
     renderExams();
     renderSubjects();
@@ -208,20 +207,6 @@
           ? `<div class="progress"><span style="width:${progress}%"></span></div><p class="next-foot">Закінчиться о ${l.to}</p>`
           : `<p class="next-foot">${humanIn(l.start - n)}</p>`}
       </div>`;
-  }
-
-  function renderStats() {
-    const n = now();
-    const wk = mondayOf(n);
-    const mine = LESSONS.filter((l) => isMine(l.key, state.me));
-    const thisWeek = mine.filter((l) => l.start >= wk && l.start < addDays(wk, 7)).length;
-    const examsLeft = mine.filter((l) => l.exam && l.end > n);
-    const electives = mySubjects(state.me).filter((k) => !SUBJECTS[k].common).length;
-    const nextExam = examsLeft[0];
-    $("#stats").innerHTML = `
-      <div class="stat"><b>${thisWeek}</b><span>пар цього тижня</span></div>
-      <div class="stat red"><b>${examsLeft.length}</b><span>заліків попереду${nextExam ? ` · перший ${fmtShort(nextExam.start)}` : ""}</span></div>
-      <div class="stat"><b>${electives}</b><span>вибіркових</span></div>`;
   }
 
   // Викладач + контакти (TEACHERS у data.js)
@@ -489,7 +474,6 @@
   setInterval(() => {
     if (!state.me) return;
     if (!document.querySelector("#next-card details[open]")) renderNext(); // не закривати відкритий Zoom
-    renderStats();
   }, 60_000);
 
   // ---------- Старт ----------
