@@ -154,10 +154,10 @@
     $("#tz-note").innerHTML = diff
       ? `${ICON_CLOCK}<span>Час пар показано за твоїм поясом${city ? ` (${city})` : ""} · <b>Київ ${fmtDiff(-diff)}</b></span>`
       : `${ICON_CLOCK}<span>Час пар за Києвом</span>`;
-    renderNext();
-    renderSchedule();
-    renderExams();
-    renderSubjects();
+    // кожен блок окремо: помилка в одному не ламає інші
+    [renderNext, renderSchedule, renderExams, renderSubjects].forEach((fn) => {
+      try { fn(); } catch (e) { console.error(fn.name, e); }
+    });
   }
 
   function relDay(d) {
