@@ -535,11 +535,16 @@ html:not(.has-orb) .hero .orb-fallback {
 @media (max-width: 639px) {
   .hide-sm { display: none !important; }
   .nav { grid-template-columns: auto 1fr auto; gap: 14px; padding-top: 18px; padding-bottom: 18px; }
-  .hero { padding-top: 96px; }
-  .hero-title { align-self: end; margin-bottom: 28px; }
+  /* Куля — фоном за заголовком, герой не займає весь екран */
+  .hero { min-height: 0; grid-template-rows: auto; padding-top: 112px; padding-bottom: 48px; }
+  .hero-title { align-self: start; margin-bottom: 0; }
   .hero-title .l2 { margin-left: 5vw; z-index: 2; }
   .hero-title .l3 { text-align: left; font-size: 0.5em; margin-top: 0.25em; }
-  .hero .orb { width: 118vw; right: -38vw; top: 34%; }
+  .hero .orb {
+    width: 100vw; right: -28vw; top: 50%; translate: 0 -50%; opacity: 0.9;
+    -webkit-mask-image: radial-gradient(closest-side, #000 70%, transparent);
+    mask-image: radial-gradient(closest-side, #000 70%, transparent);
+  }
   .hero-tick { display: none; }
   .find-head { grid-template-columns: 1fr; }
   .find-note { justify-self: start; }

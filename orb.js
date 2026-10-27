@@ -108,11 +108,12 @@ void main(){
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const u = { res: gl.getUniformLocation(prog, "uRes"), time: gl.getUniformLocation(prog, "uTime"), mouse: gl.getUniformLocation(prog, "uMouse") };
     const inst = { canvas, gl, u, visible: true, w: 0, h: 0 };
-    // Внутрішня роздільність нижча за екранну: форма м'яка, а GPU не перевантажується
-    const quality = coarse ? 0.6 : 1;
+    // Роздільність: на телефонах щільність екрана до 2x (інакше куля пікселізується),
+    // на десктопі до 1.25x; більша сторона буфера не більше 1100 px, щоб GPU не перевантажувався
     const resize = () => {
       const r = canvas.getBoundingClientRect();
-      const s = Math.min(devicePixelRatio || 1, 1.25) * quality;
+      let s = Math.min(devicePixelRatio || 1, coarse ? 2 : 1.25);
+      s = Math.min(s, 1100 / Math.max(1, r.width, r.height));
       inst.w = Math.max(1, Math.round(r.width * s));
       inst.h = Math.max(1, Math.round(r.height * s));
       canvas.width = inst.w; canvas.height = inst.h;
