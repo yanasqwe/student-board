@@ -139,7 +139,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 /* Вкладки: на телефоні — нижня навігація */
 .tabs {
   position: fixed; z-index: 30; left: 12px; right: 12px; bottom: calc(12px + var(--safe-b));
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 6px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px;
   background: rgba(22, 22, 36, .82); border: 1px solid var(--border); border-radius: 22px;
   backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4);
   box-shadow: 0 20px 50px -10px rgba(0, 0, 0, .6);
@@ -368,6 +368,16 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .contact .ico { width: 14px; height: 14px; }
 .contact.tg { color: #7dd3fc; background: rgba(41, 182, 246, .12); border: 1px solid rgba(41, 182, 246, .25); }
 .contact.tg:hover { background: rgba(41, 182, 246, .22); }
+.contact.wa { color: #86efac; background: rgba(37, 211, 102, .12); border: 1px solid rgba(37, 211, 102, .25); }
+.contact.wa:hover { background: rgba(37, 211, 102, .22); }
+.contact.mail { color: #fcd34d; background: rgba(251, 191, 36, .1); border: 1px solid rgba(251, 191, 36, .25); max-width: 100%; overflow-wrap: anywhere; }
+.contact.mail:hover { background: rgba(251, 191, 36, .2); }
+
+/* ---------- Викладачі ---------- */
+.teacher-card { display: flex; flex-direction: column; gap: 10px; }
+.teacher-card h4 { margin: 0; font-size: 16px; }
+.teacher-subjects { margin: 0; padding: 0 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+#tab-teachers .tz-note { margin: 0 0 14px; }
 
 /* ---------- Часовий пояс ---------- */
 .hello h2 { margin-bottom: 10px; }

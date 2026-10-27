@@ -20,6 +20,8 @@
   const ICON_COPY = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   const ICON_CHECK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
   const ICON_TG = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11l6 2.5M21 4l-3 16-9-6.5M21 4L9 13.5V19l3-3.5"/></svg>';
+  const ICON_WA = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3l-4.5 1.2z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1.2-1.6-2.2-1-1 .9c-1.2-.5-2.3-1.6-2.8-2.8l.9-1-1-2.2L9 8.5z"/></svg>';
+  const ICON_MAIL = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg>';
   const ICON_ALERT = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18v.01"/></svg>';
 
   // ?now=2026-11-02T16:00 — щоб перевірити, як виглядає сайт в інший момент часу
@@ -159,7 +161,7 @@
       ? `${ICON_CLOCK}<span>Час пар показано за твоїм поясом${city ? ` (${city})` : ""} · <b>Київ ${fmtDiff(-diff)}</b></span>`
       : `${ICON_CLOCK}<span>Час пар за Києвом</span>`;
     // кожен блок окремо: помилка в одному не ламає інші
-    [renderNext, renderSchedule, renderExams, renderSubjects].forEach((fn) => {
+    [renderNext, renderSchedule, renderExams, renderSubjects, renderTeachers].forEach((fn) => {
       try { fn(); } catch (e) { console.error(fn.name, e); }
     });
   }
@@ -217,7 +219,7 @@
   function teacherHtml(name) {
     const contacts = Object.entries(TEACHERS)
       .filter(([t]) => name.includes(t))
-      .flatMap(([, c]) => (c.telegram ? [`<a class="contact tg" href="https://t.me/${c.telegram}" target="_blank" rel="noopener" title="Написати в Telegram">${ICON_TG}@${c.telegram}</a>`] : []));
+      .flatMap(([, c]) => contactLinks(c));
     return `<div class="teacher-row"><span class="teacher">${ICON_TEACHER}<span>${name}</span></span>${contacts.join("")}</div>`;
   }
 
@@ -377,6 +379,48 @@
       <div class="subject-grid">${electives.map(card).join("")}</div>
       <h3 class="section-title">Загальні для групи</h3>
       <div class="subject-grid">${common.map(card).join("")}</div>`;
+  }
+
+  // Посилання на месенджери викладача (TEACHERS у data.js: telegram — нік, whatsapp — номер)
+  function contactLinks(c = {}) {
+    const out = [];
+    if (c.telegram) out.push(`<a class="contact tg" href="https://t.me/${c.telegram}" target="_blank" rel="noopener" title="Написати в Telegram">${ICON_TG}@${c.telegram}</a>`);
+    if (c.whatsapp) out.push(`<a class="contact wa" href="https://wa.me/${c.whatsapp.replace(/\D/g, "")}" target="_blank" rel="noopener" title="Написати у WhatsApp">${ICON_WA}${c.whatsapp}</a>`);
+    if (c.email) out.push(`<a class="contact mail" href="mailto:${c.email}" title="Написати на пошту">${ICON_MAIL}${c.email}</a>`);
+    return out;
+  }
+
+  // Викладачі з контактами (Telegram / WhatsApp / пошта)
+  function renderTeachers() {
+    const mine = new Set(mySubjects(state.me));
+    const map = new Map();
+    for (const [k, s] of Object.entries(SUBJECTS)) {
+      for (const name of s.teacher.split(" / ").map((t) => t.trim())) {
+        if (!map.has(name)) map.set(name, { name, subjects: [], links: contactLinks(TEACHERS[name]) });
+        map.get(name).subjects.push({ name: s.name, mine: mine.has(k) });
+      }
+    }
+    const sortKey = (n) => n.replace(/^проф\.\s*/, "");
+    const list = [...map.values()]
+      .filter((t) => t.links.length)
+      .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name), "uk"));
+    const card = (t) => {
+      const isMine = t.subjects.some((s) => s.mine);
+      return `
+        <article class="subject teacher-card" style="--c:${COLOR_LESSON}">
+          <div class="tags"><span class="badge soft">${isMine ? "твій викладач" : "інші дисципліни"}</span></div>
+          <h4>${t.name}</h4>
+          <ul class="teacher-subjects">${t.subjects.map((s) => `<li>${s.name}</li>`).join("")}</ul>
+          <div class="teacher-row">${t.links.join("")}</div>
+        </article>`;
+    };
+    const own = list.filter((t) => t.subjects.some((s) => s.mine));
+    const rest = list.filter((t) => !t.subjects.some((s) => s.mine));
+    $("#tab-teachers").innerHTML = `
+      <p class="tz-note">Контакти викладачів: Telegram, WhatsApp і пошта. Тут лише ті, чиї контакти вже є.</p>
+      ${own.length ? `<h3 class="section-title">Мої викладачі</h3><div class="subject-grid">${own.map(card).join("")}</div>` : ""}
+      ${rest.length ? `<h3 class="section-title">Інші викладачі групи</h3><div class="subject-grid">${rest.map(card).join("")}</div>` : ""}
+      ${list.length ? "" : '<p class="tz-note">Поки немає жодного контакту.</p>'}`;
   }
 
   // ---------- Події ----------

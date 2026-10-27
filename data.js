@@ -41,9 +41,10 @@ const STUDENTS = [
   "Шваб Анастасія",
 ];
 
-// Контакти викладачів (ключ — як у розкладі)
+// Контакти викладачів (ключ — як у розкладі): telegram — нік без @, whatsapp — номер, напр. "+380 67 123 45 67", email — пошта
 const TEACHERS = {
   "Криворучко С.І.": { telegram: "Sergiy_Kryvoruchko" },
+  "Пєшкова О.Г.": { email: "o.g.peshkova@karazin.ua" },
 };
 
 // common: true — загальна дисципліна для всієї групи
