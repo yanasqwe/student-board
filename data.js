@@ -43,7 +43,7 @@ const STUDENTS = [
 
 // Контакти викладачів (ключ — як у розкладі): telegram — нік без @, whatsapp — номер, напр. "+380 67 123 45 67", email — пошта
 const TEACHERS = {
-  "Криворучко С.І.": { telegram: "Sergiy_Kryvoruchko" },
+  "Криворучко Сергій Іванович": { telegram: "Sergiy_Kryvoruchko" },
   "Пєшкова О.Г.": { email: "o.g.peshkova@karazin.ua" },
 };
 
@@ -53,7 +53,7 @@ const TEACHERS = {
 const SUBJECTS = {
   im1: {
     name: "Іноземна мова I",
-    teacher: "Криворучко С.І.",
+    teacher: "Криворучко Сергій Іванович",
     links: [{ url: "https://us02web.zoom.us/j/87901995515?pwd=Nb100VPFjl6zaW3YGF0bJ6Zxvpi4yS.1" }],
     common: true,
     color: "#60a5fa",
