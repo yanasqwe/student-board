@@ -124,19 +124,6 @@ html:not(.has-orb) .hero .orb-fallback {
   box-shadow: 0 40px 120px -30px rgba(150, 212, 255, 0.35);
 }
 
-.hero-foot {
-  position: relative; z-index: 3; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
-  padding-top: 24px; border-top: 1px solid var(--line);
-}
-.hero-sub { margin: 0; max-width: 30ch; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.35; font-weight: 500; }
-.hero-sub .idx { margin-right: 6px; vertical-align: 2px; }
-.scroll-cue {
-  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
-  font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text);
-}
-.cue-line { position: relative; width: 1px; height: 44px; background: var(--line-2); overflow: hidden; }
-.cue-line::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--lime); animation: cue 2.2s var(--ease-io) infinite; }
-@keyframes cue { to { top: 100%; } }
 .hero-tick { position: absolute; z-index: 3; color: var(--dim); }
 .hero-tick.t1 { left: var(--pad); top: 96px; }
 .hero-tick.t2 { right: var(--pad); top: 96px; }
@@ -554,7 +541,6 @@ html:not(.has-orb) .hero .orb-fallback {
   .hero-title .l3 { text-align: left; font-size: 0.5em; margin-top: 0.25em; }
   .hero .orb { width: 118vw; right: -38vw; top: 34%; }
   .hero-tick { display: none; }
-  .hero-foot { flex-direction: column; align-items: flex-start; }
   .find-head { grid-template-columns: 1fr; }
   .find-note { justify-self: start; }
   .hello .orb-sm { width: 82vw; right: -30vw; top: -6vw; opacity: 0.85; }
@@ -668,12 +654,6 @@ html:not(.has-orb) .hero .orb-fallback {
 .nav, .topbar { border-bottom-color: transparent; background: linear-gradient(var(--bg) 60%, rgba(8, 10, 13, 0)); }
 .topbar { background: rgba(8, 10, 13, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .avatar { border-radius: var(--r-xs); }
-.hero-foot { border-top: 0; }
-.hero-foot::before {
-  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line-2) 20%, var(--line-2) 80%, transparent);
-}
-.cue-line { border-radius: 2px; }
 
 /* Пошук — м'яке поле-капсула */
 .search {
