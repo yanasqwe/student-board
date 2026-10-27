@@ -3,94 +3,122 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a12" />
+  <meta name="theme-color" content="#080A0D" />
   <title>Student Board · НМПЗ-21</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=202610270953" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261027101612" />
 </head>
 <body>
-  <div class="bg" aria-hidden="true">
-    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-    <div class="grid-overlay"></div>
-  </div>
+  <div class="grain" aria-hidden="true"></div>
 
-  <!-- Вибір студента -->
+  <!-- ================= Вибір студента ================= -->
   <section id="picker" class="screen">
-    <div class="picker-wrap">
-      <div class="brand">
-        <div class="logo">SB</div>
-        <span>Student Board</span>
+    <header class="nav">
+      <a class="mark" href="#top" aria-label="Student Board">SB<i>/</i>26</a>
+      <span class="nav-meta">НМПЗ-21 <i>·</i> 1 семестр</span>
+      <span class="nav-meta hide-sm">Харків <i>49.99°N 36.23°E</i></span>
+      <span class="nav-meta"><i>Київ</i> <b data-kyiv-clock>--:--</b></span>
+    </header>
+
+    <div class="hero" id="top">
+      <canvas class="orb" data-orb aria-hidden="true"></canvas>
+      <div class="orb-fallback" aria-hidden="true"></div>
+
+      <h1 class="hero-title" aria-label="Твій розклад. Без плутанини.">
+        <span class="line l1" aria-hidden="true"><span>Твій</span></span>
+        <span class="line l2" aria-hidden="true"><span><em>розклад.</em></span></span>
+        <span class="line l3" aria-hidden="true"><span>Без плу&shy;танини.</span></span>
+      </h1>
+
+      <div class="hero-foot">
+        <p class="hero-sub"><span class="idx">(01)</span> Обери себе — і побачиш тільки свої пари, вибіркові та заліки.</p>
+        <a class="scroll-cue" href="#find"><span class="cue-line"></span>Знайди себе</a>
       </div>
-      <h1 class="hero-title">Твій розклад.<br />Без плутанини.</h1>
-      <p class="hero-sub">НМПЗ-21 · 1 семестр. Обери себе — і побачиш тільки свої пари, вибіркові та заліки.</p>
-      <label class="search">
+      <span class="hero-tick t1" aria-hidden="true">TT—01</span>
+      <span class="hero-tick t2" aria-hidden="true">26.10 → 13.12</span>
+    </div>
+
+    <section class="find" id="find">
+      <div class="find-head reveal">
+        <span class="idx">(02)</span>
+        <h2>Хто ти<em>?</em></h2>
+        <p class="find-note">Список групи — <b data-count></b>. Пошук за прізвищем або ім'ям, Enter відкриває першого.</p>
+      </div>
+      <label class="search reveal">
+        <span class="sr-only">Пошук студента</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="search" type="search" placeholder="Знайди своє прізвище…" autocomplete="off" />
+        <input id="search" type="search" placeholder="Прізвище…" autocomplete="off" />
       </label>
       <div id="student-list" class="student-list"></div>
-    </div>
+    </section>
+
+    <footer class="foot">
+      <span>Student Board <i>/</i> НМПЗ-21</span>
+      <span>Розклад записаний за київським часом і показується у твоєму поясі</span>
+    </footer>
   </section>
 
-  <!-- Особистий кабінет -->
+  <!-- ================= Особистий кабінет ================= -->
   <section id="board" class="screen hidden">
     <header class="topbar">
-      <div class="brand small">
-        <div class="logo">SB</div>
-        <span>Student Board</span>
-      </div>
+      <a class="mark" href="#" aria-label="Student Board">SB<i>/</i>26</a>
+      <span class="nav-meta hide-sm">НМПЗ-21 <i>·</i> <i>Київ</i> <b data-kyiv-clock>--:--</b></span>
       <button id="me-btn" class="me-chip" title="Змінити студента">
-        <span id="me-avatar" class="avatar sm"></span>
+        <span id="me-avatar" class="avatar"></span>
         <span id="me-name" class="me-name"></span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+        <span class="me-swap">змінити</span>
       </button>
     </header>
 
     <main class="content">
       <section class="hello">
+        <canvas class="orb orb-sm" data-orb data-orb-size="small" aria-hidden="true"></canvas>
         <p class="eyebrow" id="today-label"></p>
-        <h2 id="greeting"></h2>
+        <h2 id="greeting" class="greeting"></h2>
         <p id="tz-note" class="tz-note"></p>
       </section>
 
       <section id="next-card" class="next-card"></section>
 
-      <nav class="tabs" id="tabs">
+      <nav class="tabs" id="tabs" aria-label="Розділи">
         <button data-tab="schedule" class="active">
-          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-          <span>Розклад</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <i class="tab-i">01</i><span>Розклад</span>
         </button>
         <button data-tab="exams">
-          <svg viewBox="0 0 24 24"><path d="M12 3l9 4-9 4-9-4 9-4z"/><path d="M7 9v5c0 1.5 2.2 3 5 3s5-1.5 5-3V9"/></svg>
-          <span>Заліки</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4-9 4-9-4 9-4z"/><path d="M7 9v5c0 1.5 2.2 3 5 3s5-1.5 5-3V9"/></svg>
+          <i class="tab-i">02</i><span>Заліки</span>
         </button>
         <button data-tab="subjects">
-          <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12v4H6a2 2 0 0 1-2-2z"/></svg>
-          <span>Дисципліни</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h12v4H6a2 2 0 0 1-2-2z"/></svg>
+          <i class="tab-i">03</i><span>Дисципліни</span>
         </button>
         <button data-tab="teachers">
-          <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.9.8 3 2.8 3 5.5"/></svg>
-          <span>Викладачі</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.9.8 3 2.8 3 5.5"/></svg>
+          <i class="tab-i">04</i><span>Викладачі</span>
         </button>
       </nav>
 
       <section id="tab-schedule" class="tab-panel">
         <div class="week-bar">
-          <button class="icon-btn" id="prev-week" aria-label="Попередній тиждень">
-            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
           <div class="week-label" id="week-label"></div>
-          <button class="icon-btn" id="next-week" aria-label="Наступний тиждень">
-            <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
+          <div class="week-nav">
+            <button class="icon-btn" id="prev-week" aria-label="Попередній тиждень">
+              <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="icon-btn" id="next-week" aria-label="Наступний тиждень">
+              <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
         </div>
         <div class="toolbar">
           <div class="seg" id="mode-seg">
             <button data-mode="mine" class="active">Мої пари</button>
             <button data-mode="all">Уся група</button>
           </div>
-          <button class="ghost-btn" id="today-btn">Сьогодні</button>
+          <button class="ghost-btn" id="today-btn">↺ Сьогодні</button>
         </div>
         <div class="day-strip" id="day-strip"></div>
         <div class="week" id="week"></div>
@@ -100,9 +128,15 @@
       <section id="tab-subjects" class="tab-panel hidden"></section>
       <section id="tab-teachers" class="tab-panel hidden"></section>
     </main>
+
+    <footer class="foot">
+      <span>Student Board <i>/</i> НМПЗ-21</span>
+      <span>Розклад записаний за київським часом і показується у твоєму поясі</span>
+    </footer>
   </section>
 
-  <script src="data.js?v=202610270953"></script>
-  <script src="app.js?v=202610270953"></script>
+  <script src="data.js?v=20261027101612"></script>
+  <script src="app.js?v=20261027101612"></script>
+  <script src="orb.js?v=20261027101612"></script>
 </body>
 </html>

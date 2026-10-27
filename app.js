@@ -72,7 +72,8 @@
   const hue = (str) => [...str].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
   const initials = (name) => { const [last, first = ""] = name.split(" "); return (first[0] || "") + last[0]; };
   const firstName = (name) => name.split(" ")[1] || name;
-  const avatarStyle = (name) => { const h = hue(name); return `background:linear-gradient(135deg,hsl(${h} 80% 62%),hsl(${(h + 50) % 360} 75% 48%))`; };
+  const avatarStyle = () => ""; // ініціали — у фірмовому лаймовому квадраті (styles.css)
+  const pad2 = (n) => String(n).padStart(2, "0");
 
   // Збагачені пари з розкладу
   const LESSONS = SCHEDULE.map(([date, slot, key, type, teacher, note]) => {
@@ -115,11 +116,11 @@
     $("#student-list").innerHTML = list.length
       ? list.map((s, i) => `
           <button class="student" data-name="${s}" style="--i:${i}">
-            <span class="avatar" style="${avatarStyle(s)}">${initials(s)}</span>
-            <span class="student-name"><b>${s.split(" ")[0]}</b> ${s.split(" ").slice(1).join(" ")}</span>
-            <svg class="arrow" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+            <span class="st-idx">${pad2(STUDENTS.indexOf(s) + 1)}</span>
+            <span class="student-name"><b>${s.split(" ")[0]}</b> <span>${s.split(" ").slice(1).join(" ")}</span></span>
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>`).join("")
-      : `<p class="empty-search">Нікого не знайдено 🤷</p>`;
+      : `<p class="empty-search">Нікого не знайдено. Спробуй інше написання.</p>`;
   }
 
   function choose(name) {
@@ -135,6 +136,8 @@
     $("#board").classList.remove("hidden");
     window.scrollTo(0, 0);
     renderBoard();
+    // перезапуск вхідної анімації кабінету
+    $("#board").classList.remove("enter"); void $("#board").offsetWidth; $("#board").classList.add("enter");
   }
 
   function logout() {
@@ -153,8 +156,8 @@
     $("#me-avatar").setAttribute("style", avatarStyle(me));
     $("#me-name").textContent = me;
     const n = now();
-    $("#today-label").textContent = `${DAY_NAMES[n.getDay()]}, ${fmtLong(n)}`;
-    $("#greeting").innerHTML = `Привіт, ${firstName(me)}!`;
+    $("#today-label").innerHTML = `<span>${DAY_NAMES[n.getDay()]}</span><i>/</i><span>${fmtLong(n)}</span><i>/</i><span>Тиждень ${pad2(Math.max(1, weekNumber(mondayOf(n))))}</span>`;
+    $("#greeting").innerHTML = `<span class="line"><span>Привіт,</span></span><span class="line"><span><em>${firstName(me)}</em>.</span></span>`;
     const diff = diffFromKyiv(n);
     const city = USER_TZ.split("/").pop().replace(/_/g, " ");
     $("#tz-note").innerHTML = diff
@@ -187,8 +190,8 @@
     const mine = LESSONS.filter((l) => isMine(l.key, state.me) && l.end > n);
     const el = $("#next-card");
     if (!mine.length) {
-      el.innerHTML = `<div class="next-inner"><p class="eyebrow">Семестр</p><h3>Пари в цьому розкладі закінчились 🎉</h3></div>`;
-      el.style.setProperty("--c", "#a78bfa");
+      el.className = "next-card done";
+      el.innerHTML = `<div class="next-inner"><div class="next-top"><span>(Семестр)</span></div><h3>Пари в цьому розкладі закінчились.</h3></div>`;
       return;
     }
     const l = mine[0];
@@ -199,19 +202,21 @@
     el.style.setProperty("--c", l.exam ? COLOR_EXAM : COLOR_LESSON);
     el.innerHTML = `
       <div class="next-inner">
-        <div class="next-head">
-          <span class="eyebrow">${live ? '<span class="pulse"></span>Зараз іде' : "Наступна пара"}</span>
-          <span class="next-when">${ICON_CLOCK}${relDay(l.start)} · ${l.from}–${l.to}</span>
+        <span class="next-slot" aria-hidden="true">${pad2(l.slot)}</span>
+        <div class="next-top">
+          <span>${live ? '<span class="pulse"></span>Зараз іде' : "(Наступна пара)"}</span>
+          <span>${relDay(l.start)} <i>/</i> ${l.from}–${l.to}</span>
         </div>
         <h3>${l.subject.name}</h3>
         <div class="next-meta">
           <span class="badge ${t.cls}">${l.exam ? ICON_ALERT : ""}${t.label}</span>
           ${teacherHtml(l.teacher)}
         </div>
-        ${linksDropdown(l)}
-        ${live
-          ? `<div class="progress"><span style="width:${progress}%"></span></div><p class="next-foot">Закінчиться о ${l.to}</p>`
-          : `<p class="next-foot">${humanIn(l.start - n)}</p>`}
+        <div class="next-bottom">
+          <p class="next-foot">${live ? `до ${l.to}` : humanIn(l.start - n)}</p>
+          ${linksDropdown(l)}
+        </div>
+        ${live ? `<div class="progress" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"><span style="width:${progress}%"></span></div>` : ""}
       </div>`;
   }
 
@@ -256,7 +261,7 @@
     return `
       <article class="${cls.join(" ")}" style="--c:${l.exam ? COLOR_EXAM : COLOR_LESSON}">
         <div class="time">
-          <span class="num">${l.slot}</span>
+          <span class="num">${pad2(l.slot)}</span>
           <b>${l.from}</b>
           <span class="to">${l.to}</span>
           ${l.shifted ? `<span class="kyiv" title="За київським часом">Київ ${l.kyivFrom}</span>` : ""}
@@ -283,7 +288,7 @@
     const all = state.mode === "all";
     const visible = (l) => all || isMine(l.key, state.me);
 
-    $("#week-label").innerHTML = `<b>${fmtShort(days[0])} – ${fmtShort(days[6])}</b><span>${weekNumber(wk)} тиждень</span>`;
+    $("#week-label").innerHTML = `<span>(Тиждень ${pad2(weekNumber(wk))})</span><b>${fmtShort(days[0])}<i>→</i>${fmtShort(days[6])}</b>`;
     $("#prev-week").disabled = wk <= FIRST_WEEK;
     $("#next-week").disabled = wk >= LAST_WEEK;
 
@@ -306,13 +311,16 @@
       return `
         <div class="day${iso === state.day ? " active" : ""}${isToday ? " is-today" : ""}" data-day="${iso}">
           <div class="day-head">
-            <h3>${DAY_NAMES[d.getDay()]}</h3>
-            <span>${fmtLong(d)}${isToday ? ' · <em>сьогодні</em>' : ""}</span>
-            <span class="count">${ls.length ? `${ls.length} ${plural(ls.length, ["пара", "пари", "пар"])}` : ""}</span>
+            <b class="day-num">${pad2(d.getDate())}</b>
+            <div class="day-name">
+              <h3>${DAY_NAMES[d.getDay()]}</h3>
+              <span>${fmtLong(d)}${isToday ? ' <em>· сьогодні</em>' : ""}</span>
+            </div>
+            <span class="count">${ls.length ? `${ls.length} ${plural(ls.length, ["пара", "пари", "пар"])}` : "вільно"}</span>
           </div>
           ${ls.length
             ? `<div class="lessons">${ls.map((l) => lessonCard(l, { dimOther: all })).join("")}</div>`
-            : `<div class="free"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span>Пар немає — відпочивай</span></div>`}
+            : `<div class="free"><span>Пар немає — відпочивай</span></div>`}
         </div>`;
     }).join("");
   }
@@ -337,11 +345,11 @@
           return `
             <article class="exam-item${past ? " past" : ""}">
               <div class="date-block">
-                <b>${l.start.getDate()}</b>
-                <span>${MONTHS[l.start.getMonth()].slice(0, 3)}</span>
+                <b>${pad2(l.start.getDate())}<i>.</i>${pad2(l.start.getMonth() + 1)}</b>
+                <span>${DAY_NAMES[l.start.getDay()]}</span>
               </div>
               <div class="body">
-                <div class="tags"><span class="badge exam">${ICON_ALERT}${TYPES[l.type].label}</span><span class="badge soft">${DAY_SHORT[l.start.getDay()]} · ${l.from}–${l.to}</span></div>
+                <div class="tags"><span class="badge exam">${ICON_ALERT}${TYPES[l.type].label}</span><span class="badge soft">${l.from}–${l.to}</span></div>
                 <h4>${l.subject.name}</h4>
                 ${teacherHtml(l.teacher)}
               </div>
@@ -349,20 +357,21 @@
             </article>`;
         }).join("")}</div>`
       : `<div class="free big"><span>Заліків у розкладі поки немає</span></div>`;
+    $("#tab-exams").insertAdjacentHTML("afterbegin", `<header class="panel-head"><h3>Заліки<em>.</em></h3><p>${exams.length} ${plural(exams.length, ["подія", "події", "подій"])} у твоєму розкладі. Червоний — лише для заліків і контрольних.</p></header>`);
   }
 
   function renderSubjects() {
     const n = now();
     const keys = mySubjects(state.me);
-    const card = (k) => {
+    const card = (k, i) => {
       const s = SUBJECTS[k];
       const ls = LESSONS.filter((l) => l.key === k);
       const left = ls.filter((l) => l.end > n && !l.exam).length;
       const exam = ls.find((l) => l.exam);
       const next = ls.find((l) => l.end > n);
       return `
-        <article class="subject" style="--c:${s.color}">
-          <div class="tags"><span class="badge soft">${s.common ? "загальна" : "вибіркова"}</span></div>
+        <article class="subject">
+          <span class="subj-idx">${pad2(i + 1)}</span>
           <h4>${s.name}</h4>
           ${teacherHtml(s.teacher)}
           <div class="subject-foot">
@@ -375,9 +384,10 @@
     const common = keys.filter((k) => SUBJECTS[k].common);
     const electives = keys.filter((k) => !SUBJECTS[k].common);
     $("#tab-subjects").innerHTML = `
-      <h3 class="section-title">Мої вибіркові</h3>
+      <header class="panel-head"><h3>Дисципліни<em>.</em></h3><p>${keys.length} ${plural(keys.length, ["курс", "курси", "курсів"])}: ${electives.length} ${plural(electives.length, ["вибірковий", "вибіркові", "вибіркових"])} і ${common.length} ${plural(common.length, ["загальний", "загальні", "загальних"])} для всієї групи.</p></header>
+      <h3 class="section-title"><span>(A)</span> Мої вибіркові</h3>
       <div class="subject-grid">${electives.map(card).join("")}</div>
-      <h3 class="section-title">Загальні для групи</h3>
+      <h3 class="section-title"><span>(B)</span> Загальні для групи</h3>
       <div class="subject-grid">${common.map(card).join("")}</div>`;
   }
 
@@ -407,8 +417,8 @@
     const card = (t) => {
       const isMine = t.subjects.some((s) => s.mine);
       return `
-        <article class="subject teacher-card" style="--c:${COLOR_LESSON}">
-          <div class="tags"><span class="badge soft">${isMine ? "твій викладач" : "інші дисципліни"}</span></div>
+        <article class="teacher-card${isMine ? " mine" : ""}">
+          <span class="badge soft">${isMine ? "твій викладач" : "інші дисципліни"}</span>
           <h4>${t.name}</h4>
           <ul class="teacher-subjects">${t.subjects.map((s) => `<li>${s.name}</li>`).join("")}</ul>
           <div class="teacher-row">${t.links.join("")}</div>
@@ -417,9 +427,9 @@
     const own = list.filter((t) => t.subjects.some((s) => s.mine));
     const rest = list.filter((t) => !t.subjects.some((s) => s.mine));
     $("#tab-teachers").innerHTML = `
-      <p class="tz-note">Контакти викладачів: Telegram, WhatsApp і пошта. Тут лише ті, чиї контакти вже є.</p>
-      ${own.length ? `<h3 class="section-title">Мої викладачі</h3><div class="subject-grid">${own.map(card).join("")}</div>` : ""}
-      ${rest.length ? `<h3 class="section-title">Інші викладачі групи</h3><div class="subject-grid">${rest.map(card).join("")}</div>` : ""}
+      <header class="panel-head"><h3>Викладачі<em>.</em></h3><p>Контакти: Telegram, WhatsApp і пошта. Тут лише ті, чиї контакти вже є.</p></header>
+      ${own.length ? `<h3 class="section-title">Мої викладачі</h3><div class="teacher-grid">${own.map(card).join("")}</div>` : ""}
+      ${rest.length ? `<h3 class="section-title">Інші викладачі групи</h3><div class="teacher-grid">${rest.map(card).join("")}</div>` : ""}
       ${list.length ? "" : '<p class="tz-note">Поки немає жодного контакту.</p>'}`;
   }
 
@@ -526,6 +536,8 @@
 
   // ---------- Старт ----------
   renderPicker();
+  const cnt = document.querySelector("[data-count]");
+  if (cnt) cnt.textContent = `${STUDENTS.length} ${plural(STUDENTS.length, ["людина", "людини", "людей"])}`;
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved && STUDENTS.includes(saved)) choose(saved);
 })();
