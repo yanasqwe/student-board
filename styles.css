@@ -133,7 +133,6 @@ html:not(.has-orb) .hero .orb-fallback {
 .find-head {
   display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 8px 24px; margin-bottom: clamp(28px, 4vw, 56px);
 }
-.find-head .idx { grid-column: 1 / -1; }
 .find-head h2 {
   margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(56px, 10vw, 168px);
   letter-spacing: -0.06em; line-height: 0.82;
@@ -224,7 +223,6 @@ html:not(.has-orb) .hero .orb-fallback {
 }
 .greeting .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .greeting .line > span { display: inline-block; }
-.greeting .line:nth-child(2) { margin-left: 0.6em; }
 #board.enter .greeting .line > span { animation: lineUp 1.15s var(--ease) both; }
 #board.enter .greeting .line:nth-child(2) > span { animation-delay: 0.1s; }
 @keyframes lineUp { from { transform: translateY(108%); } }
@@ -549,7 +547,6 @@ html:not(.has-orb) .hero .orb-fallback {
   .find-head { grid-template-columns: 1fr; }
   .find-note { justify-self: start; }
   .hello .orb-sm { width: 82vw; right: -30vw; top: -6vw; opacity: 0.85; }
-  .greeting .line:nth-child(2) { margin-left: 0.3em; }
   .week-bar { align-items: center; }
   .week-nav .icon-btn { width: 44px; height: 44px; }
   .seg { gap: 16px; }
@@ -667,6 +664,10 @@ html:not(.has-orb) .hero .orb-fallback {
   transition: border-color 0.6s var(--ease), box-shadow 0.6s var(--ease);
 }
 .search:focus-within { border-color: var(--lime-line); box-shadow: 0 0 0 6px rgba(150, 212, 255, 0.08), 0 20px 50px -30px rgba(150, 212, 255, 0.5); }
+/* Компактніше поле пошуку */
+.search { padding: 10px 20px; gap: 12px; }
+.search svg { width: 20px; height: 20px; stroke-width: 2; }
+.search input { font-size: clamp(17px, 1.6vw, 20px); font-weight: 600; letter-spacing: -0.01em; }
 
 /* Список групи — плавні «краплі» при наведенні */
 .student-list { margin-top: 22px; row-gap: 4px; }
