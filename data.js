@@ -45,6 +45,7 @@ const STUDENTS = [
 const TEACHERS = {
   "Криворучко Сергій Іванович": { telegram: "Sergiy_Kryvoruchko" },
   "Пєшкова О.Г.": { email: "o.g.peshkova@karazin.ua" },
+  "Кальниченко Олександр Анатолійович": { email: "kalnychenko@ukr.net" },
 };
 
 // common: true — загальна дисципліна для всієї групи
@@ -67,7 +68,7 @@ const SUBJECTS = {
   },
   aptpp: {
     name: "Актуальні проблеми теорії та практики перекладу",
-    teacher: "Кальниченко О.А.",
+    teacher: "Кальниченко Олександр Анатолійович",
     links: [{ url: "https://us05web.zoom.us/j/2220984639?pwd=SmdJSDhxQ2lSSGpqdUZUWE85d2RIdz09", passcode: "xKfG0X" }],
     color: "#a78bfa",
     students: [
