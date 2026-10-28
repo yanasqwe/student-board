@@ -44,7 +44,7 @@ const STUDENTS = [
 // Контакти викладачів (ключ — як у розкладі): telegram — нік без @, whatsapp — номер, напр. "+380 67 123 45 67", email — пошта
 const TEACHERS = {
   "Криворучко Сергій Іванович": { telegram: "Sergiy_Kryvoruchko" },
-  "Пєшкова О.Г.": { email: "o.g.peshkova@karazin.ua" },
+  "Пєшкова Ольга Геннадіївна": { email: "o.g.peshkova@karazin.ua" },
   "Кальниченко Олександр Анатолійович": { email: "kalnychenko@ukr.net" },
 };
 
@@ -134,7 +134,7 @@ const SUBJECTS = {
   },
   istp: {
     name: "Історія та сучасність українського перекладу і перекладознавства",
-    teacher: "Пєшкова О.Г.",
+    teacher: "Пєшкова Ольга Геннадіївна",
     color: "#2dd4bf",
     links: [{ url: "https://us05web.zoom.us/j/2936430531?pwd=QWo5MVZ3MmtGdTRSbXROREdLUmJldz09" }],
     students: [
