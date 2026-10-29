@@ -83,7 +83,6 @@ const SUBJECTS = {
   vgf_en: {
     name: "Вступ до германської філології (англійська)",
     teacher: "Морозова Ірина Ігорівна",
-    links: [{ url: "https://us02web.zoom.us/j/84691760240?pwd=79PwjwW0vsiDW9X7CBtla9cNUXnPjJ.1" }],
     color: "#f472b6",
     students: [
       "Бабенко Яна", "Бідна Єлизавета", "Верхогляд-Небесний Петро", "Веселова Вероніка",
@@ -179,7 +178,6 @@ const SUBJECTS = {
   kmp: {
     name: "Культура мовлення педагога",
     teacher: "Морозова Ірина Ігорівна",
-    links: [{ url: "https://us02web.zoom.us/j/84691760240?pwd=79PwjwW0vsiDW9X7CBtla9cNUXnPjJ.1" }],
     color: "#fb7185",
     students: [
       "Бідна Єлизавета", "Вергун Роксолана", "Веселова Вероніка", "Вєлієва Елвина",
